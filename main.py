@@ -31,7 +31,19 @@ stats_response = requests.post(url=stats_endpoint, json=stats_params, headers=he
 data = stats_response.json()
 print(data)
 
+today_date = datetime.now().strftime("%m/%d/%Y")
+now_time = datetime.now().strftime("%X")
 
+for exercise in data["exercises"]:
+    sheets_input = {
+        "workout": {
+            "date": today_date,
+            "time": now_time,
+            "exercise": str.title(exercise["user_input"]),
+            "duration": exercise["duration_min"],
+            "calories": exercise["nf_calories"]
+        }
+    }
 
-
-sheets_post_response = requests.post(url=sheets_post_endpoint)
+    sheets_post_response = requests.post(url=sheets_post_endpoint, json=sheets_input)
+    print(sheets_post_response.text)
